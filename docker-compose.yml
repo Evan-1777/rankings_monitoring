@@ -1,0 +1,15 @@
+services:
+  rankings-monitoring:
+    image: ghcr.io/evan-1777/rankings_monitoring:latest
+    container_name: rankings-monitoring
+    restart: unless-stopped
+    ports:
+      - "${HOST_PORT:-8080}:8080"
+    environment:
+      POLL_INTERVAL: "${POLL_INTERVAL:-900}"
+      LOG_LEVEL: "${LOG_LEVEL:-INFO}"
+    volumes:
+      - rankings-data:/data
+
+volumes:
+  rankings-data:
