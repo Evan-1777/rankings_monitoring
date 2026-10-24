@@ -417,6 +417,9 @@ async function loadEvents() {
   const token = ++state.eventsRequest;
   const container = $("#eventsList");
   setBusy(container, true);
+  if (!container.children.length) {
+    container.append(emptyState("加载中…", ""));
+  }
   const params = new URLSearchParams({
     type: state.eventType,
     category: state.eventCategory,
@@ -442,6 +445,9 @@ async function loadBoard() {
   const token = ++state.boardRequest;
   const wrap = $("#boardTableWrap");
   setBusy(wrap, true);
+  if (!wrap.children.length) {
+    wrap.append(emptyState("加载中…", ""));
+  }
   const params = new URLSearchParams();
   if (state.boardCategory) params.set("category", state.boardCategory);
   if (state.boardDataset) params.set("dataset", state.boardDataset);
@@ -547,7 +553,9 @@ function bindEvents() {
     if (!button) return;
     state.eventType = button.dataset.type;
     for (const filter of document.querySelectorAll("#typeFilters .filter")) {
-      filter.classList.toggle("is-active", filter === button);
+      const active = filter === button;
+      filter.classList.toggle("is-active", active);
+      filter.setAttribute("aria-pressed", String(active));
     }
     loadEvents().catch(handleLoadError);
   });
