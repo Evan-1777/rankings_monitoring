@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>榜单监控 · 致知</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <h1>榜单监控</h1>
+        <p>致知大模型榜单 · 新增模型与分数变更</p>
+      </div>
+      <div class="header-tools">
+        <div class="status" id="status" data-state="idle">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="statusText">正在连接</span>
+        </div>
+        <button class="icon-button" id="refreshButton" type="button" aria-label="立即检查" title="立即检查">
+          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+            <path d="M16.2 9A6.3 6.3 0 1 0 14 14.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M16.5 4.5v4.8h-4.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="notice" id="notice" role="alert" hidden>
+      <span id="noticeText"></span>
+      <button type="button" id="retryButton">重试</button>
+    </div>
+
+    <section class="stats" aria-label="监控概况">
+      <div class="stat">
+        <span class="stat-label">收录模型</span>
+        <span class="stat-value" id="statModels">—</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">监控榜单</span>
+        <span class="stat-value" id="statDatasets">—</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">累计变更</span>
+        <span class="stat-value" id="statEvents">—</span>
+      </div>
+    </section>
+
+    <div class="tabs" role="tablist" aria-label="视图">
+      <button type="button" class="tab is-active" id="tabEvents" role="tab" aria-selected="true" aria-controls="eventsView">变更动态</button>
+      <button type="button" class="tab" id="tabBoard" role="tab" aria-selected="false" aria-controls="boardView">当前榜单</button>
+    </div>
+
+    <section id="eventsView" class="view" role="tabpanel" aria-labelledby="tabEvents">
+      <div class="toolbar">
+        <div class="filters" id="typeFilters" role="group" aria-label="变更类型">
+          <button type="button" class="filter is-active" data-type="all">全部</button>
+          <button type="button" class="filter" data-type="model_added">新增模型</button>
+          <button type="button" class="filter" data-type="score_changed">分数变更</button>
+          <button type="button" class="filter" data-type="dataset_added">新榜单</button>
+          <button type="button" class="filter" data-type="model_removed">移除</button>
+        </div>
+        <label class="select-field">
+          <span>分类</span>
+          <select id="eventCategory">
+            <option value="all">全部</option>
+          </select>
+        </label>
+      </div>
+      <div id="eventsList" class="events" aria-busy="false"></div>
+    </section>
+
+    <section id="boardView" class="view" role="tabpanel" aria-labelledby="tabBoard" hidden>
+      <div class="toolbar">
+        <label class="select-field">
+          <span>分类</span>
+          <select id="boardCategory"></select>
+        </label>
+        <label class="select-field">
+          <span>榜单</span>
+          <select id="boardDataset"></select>
+        </label>
+      </div>
+      <div class="table-wrap" id="boardTableWrap"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>数据来源 <a id="sourceLink" href="https://llm2014.github.io/llm_benchmark/" target="_blank" rel="noopener noreferrer">致知榜单</a></span>
+    <span id="footerMeta">每 15 分钟检查</span>
+  </footer>
+</body>
+</html>
